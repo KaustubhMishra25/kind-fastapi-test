@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-test-deployment
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: fastapi-test
+  template:
+    metadata:
+      labels:
+        app: fastapi-test
+    spec:
+      containers:
+      - name: fastapi-test
+        image: fastapi-test:latest
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-test-service
+spec:
+  selector:
+    app: fastapi-test 
+  ports:
+  - protocol: TCP
+    port: 8080 #External port
+    targetPort: 8000 #Container port
+  type: NodePort
